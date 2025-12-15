@@ -17,7 +17,9 @@ export function LoginPage() {
     setLoading(true);
 
     try {
-      const response = await authAPI.login(login, password);
+      const userid = await authAPI.login(login, password);
+      console.log(userId);
+      
       const userId = response.data;
 
       // For demo, create a user object with returned ID

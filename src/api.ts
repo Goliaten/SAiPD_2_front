@@ -1,4 +1,5 @@
 import axios from 'axios';
+import * as CryptoJS from 'crypto-js';
 
 const API_BASE = 'http://localhost:8000';
 
@@ -18,15 +19,17 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Helper function to hash password with MD5
+export const hashPassword = (password: string): string => {
+  return CryptoJS.MD5(password).toString();
+};
+
 // API endpoints
 export const authAPI = {
   login: (login: string, password: string) =>
-    api.post<{ id: number }>('/user/add', {
-      login,
-      password,
-      first_name: 'User',
-      last_name: 'Login',
-      email: `${login}@example.com`,
+    // send credentials as query params on POST (no request body)
+    api.post<{ id: number }>('/auth', null, {
+      params: { login, password: hashPassword(password) },
     }),
   getUser: (id: number) => api.get(`/user/get/${id}`),
 };
