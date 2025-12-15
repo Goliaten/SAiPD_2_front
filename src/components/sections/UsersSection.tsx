@@ -177,7 +177,8 @@ export function UsersSection() {
                     </span>
                   </td>
                   <td className="px-6 py-4 space-x-2">
-                    <button className="text-blue-600 hover:underline">Edit</button>
+                    <button className="text-blue-600 hover:underline">Edit</button> 
+                    <div hidden> #TODO implement edit functionality </div>
                     {user.is_active ? (
                       user.id === currentUser?.id ? (
                         <button className="text-gray-400 cursor-not-allowed" disabled title="You cannot deactivate your own account">Deactivate</button>
