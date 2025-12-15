@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { userAPI, hashPassword } from '../../api';
+import { useAuthStore } from '../../store';
 
 export function UsersSection() {
   const [users, setUsers] = useState<any[]>([]);
@@ -11,6 +12,7 @@ export function UsersSection() {
     email: '',
     password: '',
   });
+  const currentUser = useAuthStore((s) => s.user);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -39,6 +41,36 @@ export function UsersSection() {
       setFormData({ first_name: '', last_name: '', login: '', email: '', password: '' });
     } catch (error) {
       console.error('Error adding user:', error);
+    }
+  };
+
+  const handleDeactivate = async (id: number) => {
+    // const currentUser = useAuthStore.getState().user;\
+    if (currentUser){
+        console.log("current user ", currentUser)
+        console.log("own id ", currentUser.id);
+        console.log("target user id ", id);
+    }
+    if (currentUser && currentUser.id === id) {
+      // Prevent deactivating own account
+      alert("You cannot deactivate your own account.");
+      return;
+    }
+
+    try {
+      await userAPI.deactivate(id);
+      setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, is_active: false } : u)));
+    } catch (error) {
+      console.error('Error deactivating user:', error);
+    }
+  };
+
+  const handleActivate = async (id: number) => {
+    try {
+      await userAPI.activate(id);
+      setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, is_active: true } : u)));
+    } catch (error) {
+      console.error('Error activating user:', error);
     }
   };
 
@@ -146,7 +178,25 @@ export function UsersSection() {
                   </td>
                   <td className="px-6 py-4 space-x-2">
                     <button className="text-blue-600 hover:underline">Edit</button>
-                    <button className="text-red-600 hover:underline">Deactivate</button>
+                    {user.is_active ? (
+                      user.id === currentUser?.id ? (
+                        <button className="text-gray-400 cursor-not-allowed" disabled title="You cannot deactivate your own account">Deactivate</button>
+                      ) : (
+                        <button
+                          className="text-red-600 hover:underline"
+                          onClick={() => handleDeactivate(user.id)}
+                        >
+                          Deactivate
+                        </button>
+                      )
+                    ) : (
+                      <button
+                        className="text-green-600 hover:underline"
+                        onClick={() => handleActivate(user.id)}
+                      >
+                        Activate
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))

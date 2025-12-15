@@ -44,6 +44,8 @@ export const userAPI = {
     api.post(`/user/add_role/${userId}?role_id=${roleId}`),
   removeRole: (userId: number, roleId: number) =>
     api.post(`/user/remove_role/${userId}?role_id=${roleId}`),
+  deactivate: (userId: number) => api.post(`/user/deactivate/${userId}`),
+  activate: (userId: number) => api.post(`/user/activate/${userId}`),
 };
 
 export const roleAPI = {
