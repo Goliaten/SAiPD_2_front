@@ -57,7 +57,7 @@ export const roleAPI = {
 export const classAPI = {
   list: (skip = 0, limit = 100, filters = {}) =>
     api.get('/class/list', { params: { skip, limit, ...filters } }),
-  get: (id: number) => api.get(`/class/get/${id}`),
+  get: (id: number) => api.get(`/class/${id}`),
   create: (data: any) => api.post('/class/add', data),
   update: (id: number, data: any) => api.post(`/class/update/${id}`, data),
   remove: (id: number) => api.post(`/class/remove/${id}`),
@@ -69,6 +69,8 @@ export const classAPI = {
     api.post(`/class/add_exercise/${classId}?exercise_id=${exerciseId}`, data),
   removeExercise: (classId: number, exerciseId: number) =>
     api.post(`/class/remove_exercise/${classId}?exercise_id=${exerciseId}`),
+  deactivate: (classId: number) => api.post(`/class/deactivate/${classId}`),
+  activate: (classId: number) => api.post(`/class/activate/${classId}`),
 };
 
 export const exerciseAPI = {
