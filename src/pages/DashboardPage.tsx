@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Navbar } from '../components/Navbar';
-import { userAPI } from '../api';
-import { hashPassword } from '../api';
 import { UsersSection } from '../components/sections/UsersSection';
 import { RolesSection } from '../components/sections/RolesSection';
 import { ClassesSection } from '../components/sections/ClassesSection';
