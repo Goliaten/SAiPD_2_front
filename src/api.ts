@@ -79,5 +79,4 @@ export const exerciseAPI = {
   get: (id: number) => api.get(`/exercise/get/${id}`),
   create: (data: any) => api.post('/exercise/add', data),
   update: (id: number, data: any) => api.post(`/exercise/update/${id}`, data),
-  delete: (id: number) => api.post(`/exercise/delete/${id}`),
 };
