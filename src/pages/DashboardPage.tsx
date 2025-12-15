@@ -8,6 +8,7 @@ import { AttendanceSection } from '../components/sections/AttendanceSection';
 import { GradingSection } from '../components/sections/GradingSection';
 import { MessagesSection } from '../components/sections/MessagesSection';
 import { TasksSection } from '../components/sections/TasksSection';
+import { ExerciseHistorySection } from '../components/sections/ExerciseHistorySection';
 
 interface NavItem {
   id: string;
@@ -20,6 +21,7 @@ const navItems: NavItem[] = [
   { id: 'roles', label: 'Roles', icon: '🔐' },
   { id: 'classes', label: 'Classes', icon: '📚' },
   { id: 'exercises', label: 'Exercises', icon: '📝' },
+  { id: 'exercise history', label: 'Exercise History', icon: '📝' },
   { id: 'attendance', label: 'Attendance', icon: '✓' },
   { id: 'grading', label: 'Grading', icon: '📊' },
   { id: 'messages', label: 'Messages', icon: '💬' },
@@ -60,6 +62,7 @@ export function DashboardPage() {
           {activeSection === 'roles' && <RolesSection />}
           {activeSection === 'classes' && <ClassesSection />}
           {activeSection === 'exercises' && <ExercisesSection />}
+          {activeSection === 'exercise history' && <ExerciseHistorySection />}
           {activeSection === 'attendance' && <AttendanceSection />}
           {activeSection === 'grading' && <GradingSection />}
           {activeSection === 'messages' && <MessagesSection />}
