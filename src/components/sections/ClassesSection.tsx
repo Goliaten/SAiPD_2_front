@@ -278,8 +278,8 @@ export function ClassesSection() {
               <div>
                 <h4 className="font-semibold mb-2">Assigned Users</h4>
                 <ul className="space-y-2 max-h-64 overflow-auto">
-                  {classUsers.map((u) => (
-                    <li key={u.id} className="flex justify-between items-center border p-2 rounded">
+                  {classUsers.map((u, idx) => (
+                      <li key={`${u.id ?? 'u'}-${idx}`} className="flex justify-between items-center border p-2 rounded">
                       <div>{u.first_name} {u.last_name} <span className="text-sm text-gray-500">{u.email}</span></div>
                       <button onClick={() => removeUserFromClass(u.id)} className="text-red-600">Remove</button>
                     </li>
@@ -289,10 +289,10 @@ export function ClassesSection() {
               <div>
                 <h4 className="font-semibold mb-2">All Users</h4>
                 <ul className="space-y-2 max-h-64 overflow-auto">
-                  {allUsers.map((u) => {
+                  {allUsers.map((u, idx) => {
                     const assigned = classUsers.some((a) => a.id === u.id);
                     return (
-                      <li key={u.id} className="flex justify-between items-center border p-2 rounded">
+                      <li key={`${u.id ?? 'a'}-${idx}`} className="flex justify-between items-center border p-2 rounded">
                         <div>{u.first_name} {u.last_name} <span className="text-sm text-gray-500">{u.email}</span></div>
                         {assigned ? <span className="text-gray-500">Assigned</span> : <button onClick={() => addUserToClass(u.id)} className="text-green-600">Add</button>}
                       </li>
@@ -317,8 +317,8 @@ export function ClassesSection() {
               <div>
                 <h4 className="font-semibold mb-2">Assigned Exercises</h4>
                 <ul className="space-y-2 max-h-64 overflow-auto">
-                  {classExercises.map((ex) => (
-                    <li key={ex.id} className="flex justify-between items-center border p-2 rounded">
+                  {classExercises.map((ex, idx) => (
+                    <li key={`${ex.id ?? 'ex'}-${idx}`} className="flex justify-between items-center border p-2 rounded">
                       <div>
                         <div className="font-medium">{ex.name}</div>
                         <div className="text-sm text-gray-500">
