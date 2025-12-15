@@ -38,6 +38,7 @@ export const userAPI = {
   list: (skip = 0, limit = 100, filters = {}) =>
     api.get('/user/list', { params: { skip, limit, ...filters } }),
   get: (id: number) => api.get(`/user/get/${id}`),
+  add: (data: any) => api.post('/user/add', data),
   update: (id: number, data: any) => api.post(`/user/update/${id}`, data),
   addRole: (userId: number, roleId: number) =>
     api.post(`/user/add_role/${userId}?role_id=${roleId}`),
