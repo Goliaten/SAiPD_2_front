@@ -140,24 +140,18 @@ export function ClassesSection() {
   const openExercisesModal = async (classId: number) => {
     setSelectedClassId(classId);
     try {
-      const [allRes, classRes] = await Promise.all([exerciseAPI.list(), classAPI.get(classId)]);
+      // fetch exercises list, class details and users (for teacher selector)
+      const [allRes, classRes, usersRes] = await Promise.all([exerciseAPI.list(), classAPI.get(classId), userAPI.list()]);
       setAllExercises(allRes.data || []);
+      setAllUsers(usersRes.data || []);
+
       const exercises = classRes.data.exercises || [];
 
-      // If exercises include teacher_id, fetch teacher logins to display
-      const teacherIds = Array.from(new Set(exercises.map((ex: any) => ex.teacher_id).filter(Boolean)));
+      // Build a teacher id->login map from fetched users to avoid per-id requests
       const teacherMap: Record<number, string> = {};
-      if (teacherIds.length) {
-        try {
-          const userPromises = teacherIds.map((id) => userAPI.get(id).then((r) => ({ id, login: r.data.login })).catch(() => ({ id, login: null })));
-          const users = await Promise.all(userPromises);
-          users.forEach((u: any) => {
-            teacherMap[u.id] = u.login;
-          });
-        } catch (err) {
-          console.warn('Failed to fetch teacher logins', err);
-        }
-      }
+      (usersRes.data || []).forEach((u: any) => {
+        if (u && u.id) teacherMap[u.id] = u.login;
+      });
 
       const exercisesWithTeacher = exercises.map((ex: any) => ({ ...ex, teacher_login: ex.teacher_id ? teacherMap[ex.teacher_id] || null : null }));
       setClassExercises(exercisesWithTeacher);
@@ -336,7 +330,11 @@ export function ClassesSection() {
               </div>
               <div>
                 <h4 className="font-semibold mb-2">Add Exercise</h4>
-                <AddExerciseForm exercises={allExercises} onAdd={(exerciseId, schedule) => addExerciseToClass(exerciseId, schedule)} />
+                <AddExerciseForm
+                  exercises={allExercises}
+                  teachers={allUsers}
+                  onAdd={(exerciseId, schedule) => addExerciseToClass(exerciseId, schedule)}
+                />
               </div>
             </div>
           </div>
@@ -346,7 +344,7 @@ export function ClassesSection() {
   );
 }
 
-function AddExerciseForm({ exercises, onAdd }: { exercises: any[]; onAdd: (id: number, schedule: any) => void }) {
+function AddExerciseForm({ exercises, teachers, onAdd }: { exercises: any[]; teachers: any[]; onAdd: (id: number, schedule: any) => void }) {
   const [selected, setSelected] = useState<number | null>(exercises[0]?.id || null);
   const [teacherId, setTeacherId] = useState<number | undefined>(undefined);
   const [dayOfWeek, setDayOfWeek] = useState<number>(1);
@@ -363,7 +361,13 @@ function AddExerciseForm({ exercises, onAdd }: { exercises: any[]; onAdd: (id: n
       <select value={selected ?? ''} onChange={(e) => setSelected(Number(e.target.value))} className="w-full border rounded px-3 py-2 mb-2">
         {exercises.map((ex) => <option key={ex.id} value={ex.id}>{ex.name}</option>)}
       </select>
-      <input type="number" placeholder="Teacher ID (optional)" value={teacherId ?? ''} onChange={(e) => setTeacherId(e.target.value ? Number(e.target.value) : undefined)} className="w-full border rounded px-3 py-2 mb-2" />
+      <label className="block text-sm text-gray-600">Teacher (optional)</label>
+      <select value={teacherId ?? ''} onChange={(e) => setTeacherId(e.target.value ? Number(e.target.value) : undefined)} className="w-full border rounded px-3 py-2 mb-2">
+        <option value="">-- none --</option>
+        {teachers.map((t) => (
+          <option key={t.id} value={t.id}>{t.login}</option>
+        ))}
+      </select>
       <label className="block text-sm text-gray-600">Day of week</label>
       <select value={dayOfWeek} onChange={(e) => setDayOfWeek(Number(e.target.value))} className="w-full border rounded px-3 py-2 mb-2">
         {[1,2,3,4,5,6,7].map(d => <option key={d} value={d}>{d}</option>)}
