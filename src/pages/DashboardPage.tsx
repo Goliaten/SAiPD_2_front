@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Navbar } from '../components/Navbar';
+import { userAPI } from '../api';
 
 interface NavItem {
   id: string;
@@ -64,7 +65,22 @@ export function DashboardPage() {
 
 function UsersSection() {
   const [users, setUsers] = useState<any[]>([]);
+  // const [users, setUsers] = userAPI.list(0,100);
   const [showForm, setShowForm] = useState(false);
+  
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await userAPI.list();
+        setUsers(response.data);  // Assuming response.data is the array of users
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        // Optionally, set an error state or show a message to the user
+      }
+    };
+    fetchUsers();
+  }, []);  // Empty dependency array to run once on mount
+
 
   return (
     <div>
