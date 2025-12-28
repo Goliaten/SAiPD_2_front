@@ -79,3 +79,11 @@ export const exerciseAPI = {
   create: (data: any) => api.post('/exercise/add', data),
   update: (id: number, data: any) => api.post(`/exercise/update/${id}`, data),
 };
+
+export const exerciseHistoryAPI = {
+  generate: (id: number) => api.get(`/history/generate/${id}`),
+  list: (skip = 0, limit = 100) =>
+    api.get('/history/list', { params: { skip, limit } }),
+  update: (id: number, data: any) => api.post(`/history/update/${id}`, data),
+  get: (id: number) => api.get(`/history/get/${id}`),
+};
