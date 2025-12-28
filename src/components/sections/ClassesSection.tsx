@@ -176,10 +176,11 @@ export function ClassesSection() {
   };
 
   const removeExerciseFromClass = async (exerciseId: number) => {
-    if (!selectedClassId) return;
+    // backend now expects class_exercise_id (relation id)
+    const classExerciseId = exerciseId;
     try {
-      await classAPI.removeExercise(selectedClassId, exerciseId);
-      setClassExercises((prev) => prev.filter((ex) => ex.id !== exerciseId));
+      await classAPI.removeExercise(classExerciseId);
+      setClassExercises((prev) => prev.filter((ex) => ex.id !== classExerciseId));
     } catch (err) {
       console.error('Error removing exercise from class', err);
       alert('Failed to remove exercise');

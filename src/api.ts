@@ -67,8 +67,7 @@ export const classAPI = {
     api.post(`/class/remove_user/${classId}?user_id=${userId}`),
   addExercise: (classId: number, exerciseId: number, data: any) =>
     api.post(`/class/add_exercise/${classId}?exercise_id=${exerciseId}&teacher_id=${data['teacher_id']}&day_of_week=${data['day_of_week']}&time_of_exercise=${data['time_of_exercise']}`),
-  removeExercise: (classId: number, exerciseId: number) =>
-    api.post(`/class/remove_exercise/${classId}?exercise_id=${exerciseId}`),
+  removeExercise: (classExerciseId: number) => api.post(`/class/remove_exercise/${classExerciseId}`),
   deactivate: (classId: number) => api.post(`/class/deactivate/${classId}`),
   activate: (classId: number) => api.post(`/class/activate/${classId}`),
 };
