@@ -1,0 +1,15 @@
+# TODO
+- [ ] implement attendance
+  - [ ] should show all attendance history
+  - [ ] should allow seeing attendance for specific exercise_history item
+  - [ ] should allow generating attendance
+  - [ ] should allow changing attendance for users
+  - [ ] should show user name and last_name
+  - [ ] should show class name
+  - [ ] should show exercise name
+- [ ] implement exercise history
+  - [ ] should show exercise_history
+  - [ ] should allow filtering by class, teacher_id, datetime range
+  - [ ] should allow generating exercise_history for classes
+- [ ] implement permission system
+  - [ ] should permit users to view only certain tabs with specific permissions from their roles
