@@ -81,9 +81,48 @@ export const exerciseAPI = {
 };
 
 export const exerciseHistoryAPI = {
-  generate: (id: number) => api.get(`/history/generate/${id}`),
-  list: (skip = 0, limit = 100) =>
-    api.get('/history/list', { params: { skip, limit } }),
+  generate: (classId: number) => api.post(`/history/generate/${classId}`),
+  list: (skip = 0, limit = 100, filters = {}) =>
+    api.get('/history/list', { params: { skip, limit, ...filters } }),
   update: (id: number, data: any) => api.post(`/history/update/${id}`, data),
   get: (id: number) => api.get(`/history/get/${id}`),
+};
+
+export const attendanceAPI = {
+  mark: (exerciseHistoryId: number, data: any) =>
+    api.post(`/attendance/mark/${exerciseHistoryId}`, data),
+  list: (skip = 0, limit = 100, filters = {}) =>
+    api.get('/attendance/list', { params: { skip, limit, ...filters } }),
+  get: (id: number) => api.get(`/attendance/get/${id}`),
+  update: (id: number, data: any) => api.post(`/attendance/update/${id}`, data),
+};
+
+export const gradeAPI = {
+  assign: (exerciseHistoryId: number, data: any) =>
+    api.post(`/grades/assign/${exerciseHistoryId}`, data),
+  list: (skip = 0, limit = 100, filters = {}) =>
+    api.get('/grades/list', { params: { skip, limit, ...filters } }),
+  get: (id: number) => api.get(`/grades/get/${id}`),
+  update: (id: number, data: any) => api.post(`/grades/update/${id}`, data),
+  statistics: (filters = {}) =>
+    api.get('/grades/statistics', { params: filters }),
+};
+
+export const taskAPI = {
+  list: (skip = 0, limit = 100, filters = {}) =>
+    api.get('/task/', { params: { skip, limit, ...filters } }),
+  get: (id: number) => api.get(`/task/${id}`),
+  create: (data: any) => api.post('/task/', data),
+  update: (id: number, data: any) => api.put(`/task/${id}`, data),
+  updateStatus: (id: number, newStatus: string) =>
+    api.put(`/task/${id}/status/${newStatus}`),
+  delete: (id: number) => api.delete(`/task/${id}`),
+};
+
+export const messageAPI = {
+  list: (skip = 0, limit = 100, filters = {}) =>
+    api.get('/msg/', { params: { skip, limit, ...filters } }),
+  get: (id: number) => api.get(`/msg/${id}`),
+  create: (data: any) => api.post('/msg/', data),
+  delete: (id: number) => api.delete(`/msg/${id}`),
 };
