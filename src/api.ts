@@ -95,8 +95,32 @@ export const attendanceAPI = {
     api.get('/attend/list', { params: { skip, limit, ...filters } }),
   get: (id: number) => api.get(`/attend/get/${id}`),
   update: (id: number, data: any) => api.post(`/attend/update/${id}`, data),
+  // Generate attendance rows for a given exercise_history_id. Returns integer count.
   generate: (exerciseHistoryId: number, force = false) =>
     api.get(`/attend/${exerciseHistoryId}/generate`, { params: { force } }),
+  // Convenience endpoints to set status for a single user/session.
+  // They follow: GET /attend/{exercise_history_id}/{user_id}/{present|absent|late}?force={bool}
+  present: (exerciseHistoryId: number, userId: number, force = false) =>
+    api.get(`/attend/${exerciseHistoryId}/${userId}/present`, { params: { force } }),
+  absent: (exerciseHistoryId: number, userId: number, force = false) =>
+    api.get(`/attend/${exerciseHistoryId}/${userId}/absent`, { params: { force } }),
+  late: (exerciseHistoryId: number, userId: number, force = false) =>
+    api.get(`/attend/${exerciseHistoryId}/${userId}/late`, { params: { force } }),
+  // Generic helper to call one of the convenience endpoints based on status.
+  setStatusForUser: (exerciseHistoryId: number, userId: number, status: string, force = false) => {
+    switch (status) {
+      case 'present':
+        return api.get(`/attend/${exerciseHistoryId}/${userId}/present`, { params: { force } });
+      case 'absent':
+        return api.get(`/attend/${exerciseHistoryId}/${userId}/absent`, { params: { force } });
+      case 'late':
+        return api.get(`/attend/${exerciseHistoryId}/${userId}/late`, { params: { force } });
+      default:
+        // For statuses not covered by convenience endpoints (e.g. 'excused') fall back to update by id.
+        // Caller should use `update` in that case; here we throw to make intent explicit.
+        throw new Error('Unsupported convenience status');
+    }
+  },
 };
 
 export const gradeAPI = {

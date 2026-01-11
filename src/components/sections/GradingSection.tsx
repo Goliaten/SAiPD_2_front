@@ -222,7 +222,7 @@ export function GradingSection() {
     <div>
       <h2 className="text-2xl font-bold mb-6">Grading</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div className="bg-white rounded-lg shadow p-4">
           <p className="text-gray-600 text-sm mb-1">Average Grade</p>
           <p className="text-3xl font-bold text-blue-600">{(statistics.avg || 0).toFixed(2)}</p>
@@ -243,7 +243,7 @@ export function GradingSection() {
             Refresh Stats
           </button>
         </div>
-      </div>
+      </div> */}
 
       <div className="bg-white rounded-lg shadow p-6 mb-6">
         <div className="flex justify-between items-center mb-4">
