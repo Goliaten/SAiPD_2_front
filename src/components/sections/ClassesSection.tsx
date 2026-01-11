@@ -225,6 +225,7 @@ export function ClassesSection() {
         <table className="w-full">
           <thead className="bg-gray-100">
             <tr>
+              <th className="px-6 py-3 text-left">Id</th>
               <th className="px-6 py-3 text-left">Name</th>
               <th className="px-6 py-3 text-left">From</th>
               <th className="px-6 py-3 text-left">To</th>
@@ -240,6 +241,7 @@ export function ClassesSection() {
             ) : (
               classes.map((c) => (
                 <tr key={c.id} className="border-t hover:bg-gray-50">
+                  <td className="px-6 py-4">{c.id}</td>
                   <td className="px-6 py-4">{c.name}</td>
                   <td className="px-6 py-4">{new Date(c.date_from).toLocaleString()}</td>
                   <td className="px-6 py-4">{new Date(c.date_to).toLocaleString()}</td>
