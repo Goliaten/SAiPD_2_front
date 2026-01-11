@@ -18,13 +18,13 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { id: 'users', label: 'Users', icon: '👥' },
-  { id: 'roles', label: 'Roles', icon: '🔐' },
+  // { id: 'roles', label: 'Roles', icon: '🔐' },
   { id: 'classes', label: 'Classes', icon: '📚' },
   { id: 'exercises', label: 'Exercises', icon: '📝' },
   { id: 'exercise history', label: 'Exercise History', icon: '📝' },
   { id: 'attendance', label: 'Attendance', icon: '✓' },
   { id: 'grading', label: 'Grading', icon: '📊' },
-  { id: 'messages', label: 'Messages', icon: '💬' },
+  // { id: 'messages', label: 'Messages', icon: '💬' },
   { id: 'tasks', label: 'Tasks', icon: '☑️' },
 ];
 

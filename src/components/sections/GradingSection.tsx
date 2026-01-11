@@ -5,10 +5,7 @@ type Grade = {
   id: number;
   user_id: number;
   exercise_history_id: number;
-  grade: number;
-  feedback: string;
-  graded_by: number;
-  graded_at: string;
+  grade: string | null;
   created_date: string;
   modified_date: string;
 };
@@ -30,12 +27,6 @@ type Class = {
   name: string;
 };
 
-type Statistics = {
-  avg?: number;
-  min?: number;
-  max?: number;
-};
-
 export function GradingSection() {
   const [grades, setGrades] = useState<Grade[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -52,15 +43,13 @@ export function GradingSection() {
     teacher_id: '',
   });
 
-  const [statistics, setStatistics] = useState<Statistics>({});
-  const [showStatistics, setShowStatistics] = useState(false);
 
   const [showAssignModal, setShowAssignModal] = useState(false);
-  const [assignForm, setAssignForm] = useState({ exercise_history_id: '', user_id: '', grade: '', feedback: '' });
+  const [assignForm, setAssignForm] = useState({ exercise_history_id: '', user_id: '', grade: '' });
   const [assigningId, setAssigningId] = useState<number | null>(null);
 
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [editForm, setEditForm] = useState({ grade: '', feedback: '' });
+  const [editForm, setEditForm] = useState({ grade: '' });
   const [showEditModal, setShowEditModal] = useState(false);
 
   const [exerciseHistories, setExerciseHistories] = useState<any[]>([]);
@@ -127,23 +116,6 @@ export function GradingSection() {
     }
   };
 
-  const fetchStatistics = async () => {
-    try {
-      const filterParams: any = {};
-      if (filters.user_id) filterParams.user_id = parseInt(filters.user_id);
-      if (filters.exercise_id) filterParams.exercise_id = parseInt(filters.exercise_id);
-      if (filters.class_id) filterParams.class_id = parseInt(filters.class_id);
-      if (filters.teacher_id) filterParams.teacher_id = parseInt(filters.teacher_id);
-
-      const res = await gradeAPI.statistics(filterParams);
-      setStatistics(res.data || {});
-      setShowStatistics(true);
-    } catch (err) {
-      console.error('Error fetching statistics', err);
-      alert('Failed to load statistics');
-    }
-  };
-
   const handleAssignGrade = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!assignForm.exercise_history_id || !assignForm.user_id || !assignForm.grade) {
@@ -154,14 +126,14 @@ export function GradingSection() {
     setAssigningId(parseInt(assignForm.exercise_history_id));
     try {
       const payload = {
+        exercise_history_id: parseInt(assignForm.exercise_history_id),
         user_id: parseInt(assignForm.user_id),
-        grade: parseFloat(assignForm.grade),
-        feedback: assignForm.feedback,
+        grade: assignForm.grade,
       };
-      await gradeAPI.assign(parseInt(assignForm.exercise_history_id), payload);
+      await gradeAPI.create(payload);
       await fetchGrades();
       setShowAssignModal(false);
-      setAssignForm({ exercise_history_id: '', user_id: '', grade: '', feedback: '' });
+      setAssignForm({ exercise_history_id: '', user_id: '', grade: '' });
       alert('Grade assigned successfully!');
     } catch (err: any) {
       console.error('Error assigning grade', err);
@@ -173,7 +145,7 @@ export function GradingSection() {
 
   const openEditModal = (grade: Grade) => {
     setEditingId(grade.id);
-    setEditForm({ grade: grade.grade.toString(), feedback: grade.feedback });
+    setEditForm({ grade: grade.grade || '' });
     setShowEditModal(true);
   };
 
@@ -182,9 +154,16 @@ export function GradingSection() {
     if (!editingId) return;
 
     try {
+      const gradeRecord = grades.find((g) => g.id === editingId);
+      if (!gradeRecord) {
+        alert('Grade record not found');
+        return;
+      }
+
       const payload = {
-        grade: parseFloat(editForm.grade),
-        feedback: editForm.feedback,
+        exercise_history_id: gradeRecord.exercise_history_id,
+        user_id: gradeRecord.user_id,
+        grade: editForm.grade,
       };
       await gradeAPI.update(editingId, payload);
       await fetchGrades();
@@ -192,7 +171,11 @@ export function GradingSection() {
       alert('Grade updated successfully!');
     } catch (err: any) {
       console.error('Error updating grade', err);
-      alert(err.response?.data?.detail || 'Failed to update grade');
+      const errorMsg = err.response?.data?.detail || 
+                      (typeof err.response?.data === 'string' ? err.response.data : '') ||
+                      err.message ||
+                      'Failed to update grade';
+      alert(errorMsg);
     }
   };
 
@@ -331,22 +314,20 @@ export function GradingSection() {
               <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">User</th>
               <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Exercise History ID</th>
               <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Grade</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Feedback</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Graded By</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Graded At</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Created Date</th>
               <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Actions</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={8} className="px-6 py-4 text-center text-gray-500">
+                <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
                   Loading...
                 </td>
               </tr>
             ) : grades.length === 0 ? (
               <tr>
-                <td colSpan={8} className="px-6 py-4 text-center text-gray-500">
+                <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
                   No grades found
                 </td>
               </tr>
@@ -357,13 +338,11 @@ export function GradingSection() {
                   <td className="px-6 py-4 text-sm">{getUserName(grade.user_id)}</td>
                   <td className="px-6 py-4 text-sm">{grade.exercise_history_id}</td>
                   <td className="px-6 py-4 text-sm">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getGradeColor(grade.grade)}`}>
-                      {grade.grade.toFixed(2)}
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getGradeColor(typeof grade.grade === 'string' ? parseFloat(grade.grade) || 0 : 0)}`}>
+                      {grade.grade || '-'}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">{grade.feedback || '-'}</td>
-                  <td className="px-6 py-4 text-sm">{grade.graded_by}</td>
-                  <td className="px-6 py-4 text-sm">{formatDateTime(grade.graded_at)}</td>
+                  <td className="px-6 py-4 text-sm">{formatDateTime(grade.created_date)}</td>
                   <td className="px-6 py-4 text-sm">
                     <button
                       onClick={() => openEditModal(grade)}
@@ -441,24 +420,11 @@ export function GradingSection() {
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">Grade *</label>
                 <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  max="100"
+                  type="text"
                   value={assignForm.grade}
                   onChange={(e) => setAssignForm((prev) => ({ ...prev, grade: e.target.value }))}
-                  placeholder="Enter grade (0-100)"
+                  placeholder="Enter grade (e.g., A, B+, 85)"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Feedback</label>
-                <textarea
-                  value={assignForm.feedback}
-                  onChange={(e) => setAssignForm((prev) => ({ ...prev, feedback: e.target.value }))}
-                  placeholder="Add feedback..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  rows={3}
                 />
               </div>
               <div className="flex gap-4">
@@ -491,24 +457,11 @@ export function GradingSection() {
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">Grade</label>
                 <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  max="100"
+                  type="text"
                   value={editForm.grade}
                   onChange={(e) => setEditForm((prev) => ({ ...prev, grade: e.target.value }))}
-                  placeholder="Enter grade (0-100)"
+                  placeholder="Enter grade (e.g., A, B+, 85)"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium mb-2">Feedback</label>
-                <textarea
-                  value={editForm.feedback}
-                  onChange={(e) => setEditForm((prev) => ({ ...prev, feedback: e.target.value }))}
-                  placeholder="Add feedback..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  rows={4}
                 />
               </div>
               <div className="flex gap-4">

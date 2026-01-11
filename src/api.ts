@@ -124,14 +124,17 @@ export const attendanceAPI = {
 };
 
 export const gradeAPI = {
-  assign: (exerciseHistoryId: number, data: any) =>
-    api.post(`/grade/assign/${exerciseHistoryId}`, data),
+  // Create or upsert a grade: POST /grade/
+  create: (data: any) => api.post('/grade/', data),
+  // List grades with pagination and optional filters: GET /grade/
   list: (skip = 0, limit = 100, filters = {}) =>
-    api.get('/grade/list', { params: { skip, limit, ...filters } }),
-  get: (id: number) => api.get(`/grade/get/${id}`),
-  update: (id: number, data: any) => api.post(`/grade/update/${id}`, data),
-  statistics: (filters = {}) =>
-    api.get('/grade/statistics', { params: filters }),
+    api.get('/grade/', { params: { skip, limit, ...filters } }),
+  // Retrieve single grade: GET /grade/{id}
+  get: (id: number) => api.get(`/grade/${id}`),
+  // Update grade: PUT /grade/{id}
+  update: (id: number, data: any) => api.put(`/grade/${id}`, data),
+  // Delete grade: DELETE /grade/{id}
+  delete: (id: number) => api.delete(`/grade/${id}`),
 };
 
 export const taskAPI = {
