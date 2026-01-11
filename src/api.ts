@@ -90,22 +90,24 @@ export const exerciseHistoryAPI = {
 
 export const attendanceAPI = {
   mark: (exerciseHistoryId: number, data: any) =>
-    api.post(`/attendance/mark/${exerciseHistoryId}`, data),
+    api.post(`/attend/mark/${exerciseHistoryId}`, data),
   list: (skip = 0, limit = 100, filters = {}) =>
-    api.get('/attendance/list', { params: { skip, limit, ...filters } }),
-  get: (id: number) => api.get(`/attendance/get/${id}`),
-  update: (id: number, data: any) => api.post(`/attendance/update/${id}`, data),
+    api.get('/attend/list', { params: { skip, limit, ...filters } }),
+  get: (id: number) => api.get(`/attend/get/${id}`),
+  update: (id: number, data: any) => api.post(`/attend/update/${id}`, data),
+  generate: (exerciseHistoryId: number, force = false) =>
+    api.get(`/attend/${exerciseHistoryId}/generate`, { params: { force } }),
 };
 
 export const gradeAPI = {
   assign: (exerciseHistoryId: number, data: any) =>
-    api.post(`/grades/assign/${exerciseHistoryId}`, data),
+    api.post(`/grade/assign/${exerciseHistoryId}`, data),
   list: (skip = 0, limit = 100, filters = {}) =>
-    api.get('/grades/list', { params: { skip, limit, ...filters } }),
-  get: (id: number) => api.get(`/grades/get/${id}`),
-  update: (id: number, data: any) => api.post(`/grades/update/${id}`, data),
+    api.get('/grade/list', { params: { skip, limit, ...filters } }),
+  get: (id: number) => api.get(`/grade/get/${id}`),
+  update: (id: number, data: any) => api.post(`/grade/update/${id}`, data),
   statistics: (filters = {}) =>
-    api.get('/grades/statistics', { params: filters }),
+    api.get('/grade/statistics', { params: filters }),
 };
 
 export const taskAPI = {
