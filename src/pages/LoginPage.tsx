@@ -94,10 +94,6 @@ export function LoginPage() {
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
-
-        <p className="text-center text-gray-600 text-sm mt-6">
-          Demo credentials: any login/password (users are auto-created)
-        </p>
       </div>
     </div>
   );
