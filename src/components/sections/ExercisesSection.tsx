@@ -89,6 +89,7 @@ export function ExercisesSection() {
         <table className="w-full">
           <thead className="bg-gray-100">
             <tr>
+              <th className="px-6 py-3 text-left">Id</th>
               <th className="px-6 py-3 text-left">Name</th>
               <th className="px-6 py-3 text-left">Description</th>
               <th className="px-6 py-3 text-left">Actions</th>
@@ -102,6 +103,7 @@ export function ExercisesSection() {
             ) : (
               exercises.map((ex, idx) => (
                 <tr key={`${ex.id ?? 'ex'}-${idx}`} className="border-t hover:bg-gray-50">
+                  <td className="px-6 py-4">{ex.id}</td>
                   <td className="px-6 py-4">{ex.name}</td>
                   <td className="px-6 py-4">{ex.description}</td>
                   <td className="px-6 py-4 space-x-2">

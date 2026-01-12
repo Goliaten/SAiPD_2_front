@@ -246,7 +246,7 @@ export function GradingSection() {
       {/* Filters */}
       <div className="bg-white rounded-lg shadow p-6 mb-6">
         <h3 className="text-lg font-semibold mb-4">Filters</h3>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium mb-2">User</label>
             <select
@@ -292,7 +292,7 @@ export function GradingSection() {
               ))}
             </select>
           </div>
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium mb-2">Teacher ID</label>
             <input
               type="number"
@@ -301,7 +301,7 @@ export function GradingSection() {
               placeholder="Filter by teacher ID"
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-          </div>
+          </div> */}
         </div>
       </div>
 

@@ -306,12 +306,11 @@ export function AttendanceSection() {
         <table className="w-full">
           <thead className="bg-gray-100 border-b">
             <tr>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">ID</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Exercise history ID</th>
               <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">User</th>
               <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Exercise</th>
               <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">DateTime</th>
               <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Status</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Marked At</th>
               <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Actions</th>
             </tr>
           </thead>
@@ -333,7 +332,7 @@ export function AttendanceSection() {
                 const exerciseInfo = getExerciseInfo(attendance.exercise_history_id);
                 return (
                 <tr key={attendance.id} className="border-b hover:bg-gray-50">
-                  <td className="px-6 py-4 text-sm">{attendance.id}</td>
+                  <td className="px-6 py-4 text-sm">{attendance.exercise_history_id}</td>
                   <td className="px-6 py-4 text-sm">{getUserName(attendance.user_id)}</td>
                   <td className="px-6 py-4 text-sm">{exerciseInfo.name}</td>
                   <td className="px-6 py-4 text-sm text-gray-600 text-xs">{exerciseInfo.datetime}</td>
@@ -342,7 +341,6 @@ export function AttendanceSection() {
                       {attendance.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm">{formatDateTime(attendance.marked_at)}</td>
                   <td className="px-6 py-4 text-sm">
                     <div className="flex gap-2">
                       <button

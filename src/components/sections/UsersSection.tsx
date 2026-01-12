@@ -282,6 +282,7 @@ export function UsersSection() {
         <table className="w-full">
           <thead className="bg-gray-100">
             <tr>
+              <th className="px-6 py-3 text-left">Id</th>
               <th className="px-6 py-3 text-left">Name</th>
               <th className="px-6 py-3 text-left">Login</th>
               <th className="px-6 py-3 text-left">Email</th>
@@ -299,6 +300,7 @@ export function UsersSection() {
             ) : (
               users.map((user) => (
                 <tr key={user.id} className="border-t hover:bg-gray-50">
+                  <td className="px-6 py-4">{user.id}</td>
                   <td className="px-6 py-4">{user.first_name} {user.last_name}</td>
                   <td className="px-6 py-4">{user.login}</td>
                   <td className="px-6 py-4">{user.email}</td>
